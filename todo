@@ -1,1 +1,5 @@
 - [ ] Tack angle automatisch bestimmen. (So weit bis )
+- [ ] Real world Cordiantes
+- [ ] A* or other pathinfing
+- [ ] PD Controller für Segel und Ruder
+- [ ] Sensor Integartion (WIND etc. )
