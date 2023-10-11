@@ -5,13 +5,12 @@ from helper import *
 from visualize import visualize
 from heading import calculate_new_heading
 from constants import constants as c
-from animate import animate_boat_position
 from map_geojson import lake
+from animate import generate_path
 
 
 
-
-def main():
+def simulate():
 
     print("GOAL: ", c.GOAL)
     print("START: ", c.START)
@@ -24,13 +23,20 @@ def main():
     goal_heading = vectorize_angle(goal_vector)
     (x, y) = calculate_closest_point_on_line(c.BOAT, c.START, c.GOAL)[2:]
     min_index = calculate_closest_point_on_line(c.BOAT, c.START, c.GOAL)[1]
+    generate_path(boat_vector, wind_direction_vector, goal_vector, 0.001)
+   # new_heading = calculate_new_heading(
+ #       boat_vector, wind_direction_vector, goal_vector)
+   # visualize(c.START, c.GOAL, c.BOAT, x, y, min_index,
+   #           wind_direction_vector, new_heading, goal_vector, lake.LAKE)
+  
 
-    new_heading = calculate_new_heading(
-        boat_vector, wind_direction_vector, c.TACK_ANGLE, goal_vector, goal_heading)
-    visualize(c.START, c.GOAL, c.BOAT, x, y, min_index,
-              wind_direction_vector, new_heading, goal_vector, lake.LAKE)
 
+def main():
+    simulate()
     
+
+
+
 
 if __name__ == "__main__":
     main()
