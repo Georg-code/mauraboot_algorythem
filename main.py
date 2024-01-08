@@ -8,8 +8,12 @@ from constants import constants as c
 from map_geojson import lake
 from animate import generate_path
 import time
+import serial
+import json
 
 
+serial_port = '/dev/ttyUSB0'  # Adjust this to your Arduino's serial port
+baud_rate = 9600
 
 def simulate():
 
@@ -47,17 +51,46 @@ def run(boat_vector, boat_location, wind_direction_vector, goal_vector, interval
     
     
    
-    time.sleep(interval)
-    run(boat_vector, c.BOAT, wind_direction_vector, goal_vector, 1, simulate)
+    return new_heading
       
 
 
 def main():
-    boat_vector = normalize(c.GOAL - c.START)
-    wind_direction_vector = normalize(vectorize_angle(c.WIND_DIRECTION))
-    goal_vector = normalize(c.GOAL - c.BOAT)
-   # run(boat_vector, c.BOAT, wind_direction_vector, goal_vector, 1, True)
-    simulate()
+    ser = serial.Serial(serial_port, baud_rate)
+    try:
+        while True:
+        # Read a line from the serial port
+            line = ser.readline().decode('utf-8').strip()
+
+            try:
+                
+                if line == '':
+                    continue
+
+          
+                data = json.loads(line)
+
+                gps_lat = data['gps_lat']
+                gps_lng = data['gps_lng']
+
+                # make an np array of the gps data
+                gps_data = np.array([gps_lat, gps_lng])
+
+                # Do something with the data
+                print(f'GPS Latitude: {gps_lat}, Longitude: {gps_lng}')
+
+                boat_vector = normalize(c.GOAL - c.START)
+                wind_direction_vector = normalize(vectorize_angle(c.WIND_DIRECTION))
+                goal_vector = normalize(c.GOAL - gps_data)
+                heading = run(boat_vector, gps_data, wind_direction_vector, goal_vector, 1, False)
+
+            except json.JSONDecodeError as e:
+                print(f"Error decoding JSON: {e}")
+
+    except KeyboardInterrupt:
+    # Close the serial connection on program exit
+        ser.close()
+        print("Serial connection closed.")
 
 
 
