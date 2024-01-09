@@ -67,3 +67,17 @@ def singed_angle(v1, v2):
         angle_deg = np.degrees(angle_rad)
     
         return angle_deg
+
+
+
+def convert_range(value, from_min, from_max, to_min, to_max):
+    # Ensure the value is within the input range
+    value = max(from_min, min(value, from_max))
+    
+    # Calculate the normalized value in the input range
+    normalized_value = (value - from_min) / (from_max - from_min)
+    
+    # Map the normalized value to the output range
+    result = normalized_value * (to_max - to_min) + to_min
+    
+    return result
