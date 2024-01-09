@@ -9,10 +9,12 @@ from map_geojson import lake
 import time
 import serial
 import json
+from gpiozero import Servo
 
 
 serial_port = '/dev/tty0'  # Adjust this to your Arduino's serial port
 baud_rate = 9600
+servo = Servo(6)
 
 
   
@@ -80,6 +82,7 @@ def main():
                 # servo value is between 0 and 1
                 servo_value = 0.5 + correction
                 print(f'Servo Value: {servo_value}')
+                servo.value = servo_value
 
                 
                     
