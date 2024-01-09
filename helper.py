@@ -81,3 +81,22 @@ def convert_range(value, from_min, from_max, to_min, to_max):
     result = normalized_value * (to_max - to_min) + to_min
     
     return result
+
+
+def pd_controller(actual_heading, desired_heading, Kp=1.0, Kd=0.1):
+    # Calculate error
+    error = desired_heading - actual_heading
+
+    # Calculate derivative of error
+    derivative = np.gradient(error)
+
+    # Calculate control signal
+    control_signal = Kp * error + Kd * derivative
+
+    # Map control signal to the range [0, 1]
+    mapped_control_signal = np.clip(control_signal, 0, 1)
+
+    # Convert to linear servo values (0 to 0.5 for left, 0.5 to 1 for right)
+    servo_value = 0.5 + mapped_control_signal / 2
+
+    return servo_value

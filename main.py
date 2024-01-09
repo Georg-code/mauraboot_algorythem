@@ -71,18 +71,8 @@ def main():
                 print(f'Actual Heading: {actual_heading}')
 
                 # write a pd controller for a servo. The servo is a linear servo connected to the rudder of a boat. Anything over the middle is turning right and anything under the middle is turning left. Controll the servo with gpiozero
-                p = 0.5
-                d = 0.5
-                error = actual_heading - optimal_heading
-                derivative = error - d
-                correction = p * error + d * derivative
-                print(f'Error: {error}')
-                print(f'Correction: {correction}')
-
-                # servo value is between 0 and 1
-                servo_value = 0.5 + correction
-                print(f'Servo Value: {servo_value}')
-                servo.value = servo_value
+                
+                servo.value = pd_controller(actual_heading, optimal_heading)
 
                 
                     
